@@ -200,8 +200,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3630101601092014487}
   - component: {fileID: 3630101601092014486}
-  - component: {fileID: 26945285}
-  m_Layer: 0
+  - component: {fileID: 5418279846259459662}
+  m_Layer: 2
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -241,7 +241,7 @@ CharacterController:
   m_SkinWidth: 0.0001
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &26945285
+--- !u!114 &5418279846259459662
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -260,4 +260,4 @@ MonoBehaviour:
   _gravityScale: 2
   _groundLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
