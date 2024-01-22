@@ -1,29 +1,23 @@
 ## 🏃‍♂️ TPMovement
-**TPMovement** is a thrid person movement system for unity project, using unity's `character controller` as its base component.
-Still using unity's old input, and no animation implemented since only focus on movement.
-
-<div align="center">
+**TPMovement** is a thrid person movement system for unity project, using unity's `character controller` as its base component. Still using unity's old input, and no animation in script.
   
 | Features | Control | Preview |
 | --- | --- | --- |
-| Basic Move | `WASD` | <img src="https://github.com/vianagus/Unity-TPMovement/assets/58974402/c97030ca-8fbc-494b-b8f1-e3ed01c568c1" alt="TPMovementPreviewBasicMove" width="480"/> |
-| Run | `Left Shift` | <img src="https://github.com/vianagus/Unity-TPMovement/assets/58974402/0c1800aa-77e0-43e0-a386-9ab0ace61a9d" alt="TPMovementPreviewRun" width="480"/> |
-| Jump | `Space` | <img src="https://github.com/vianagus/Unity-TPMovement/assets/58974402/a988cc53-0926-4a48-8b50-57f1f99b0cce" alt="TPMovementPreviewJump" width="480"/> |
-
-_More feartures and changes will be added in the future._
-
-</div>
+| Basic Move | `WASD` | <img src="./_Readme/basicmove_preview.gif" alt="TPMovement Basic Move Preview" width="480"/> |
+| Run | `Left Shift` | <img src="./_Readme/run_preview.gif" alt="TPMovement Run Preview" width="480"/> |
+| Jump | `Space` | <img src="./_Readme/jump_preview.gif" alt="TPMovement Jump Preview" width="480"/> |
 
 ## 🔗 Download
-unity package download: [click here](https://www.dropbox.com/scl/fi/5scubjyq3jf9xr6wc6mby/TPMovement.unitypackage?rlkey=o3yrxtugbkiikp1xeldflqea9&dl=1)
+unity package download: [👉TPMovement.unitypackage👈](https://github.com/vianagus/Unity-TPMovement/raw/main/_Unity%20Package/TPMovement.unitypackage)
 
-## ⚙ Setup
+## ⚙ Installation
 1. Download and import the unity package into unity project.
 2. Create a `ground layer` if not already created.
 3. Make sure to change the ground objects' layer into `ground layer`.
 4. Put `TPMovement.cs` into player object.
 5. Set `Ground Layer` attribute with the `ground layer`.
 
+## 🧩 Attributes
 Adjust the following attributes to affect the movement.
 | Attribute | Type  | Description |
 | --- | --- | --- |
