@@ -11,14 +11,15 @@ public class TPMovement : MonoBehaviour
     [SerializeField] private float _jumpHeight = 2f;
     [Range(0f, 1f)] [SerializeField] private float _smoothFacing = 0.75f;
     private Vector3 _movement;
+    private bool _isRunning;
 
     [Header("Physics")]
     [SerializeField] private float _gravityScale = 2f;
     private const float _GRAVITY = -9.8f;
 
     [Header("Ground Check")]
+    [SerializeField] float _groundCheckRadius = 0.1f;
     [SerializeField] private LayerMask _groundLayer;
-    private float _groundCheckRadius;
     private bool _isGrounded;
 
     // input variables
@@ -43,28 +44,34 @@ public class TPMovement : MonoBehaviour
         _characterController = GetComponent<CharacterController>();     // get character controller component
     }
 
-    private void Start()
-    {
-        _groundCheckRadius = _characterController.radius;   // set ground check radius the same as character controller's radius
-    }
-
     private void Update()
     {
         // handle inputs
         HandleInput();
 
         // ground check
-        HandleGroundCheck();
+        HandleGroundCheck(_groundCheckRadius, _groundLayer);
 
         // handle gravity
-        HandleGravity(_GRAVITY * _gravityScale);
+        HandleGravity(_GRAVITY, _gravityScale);
 
         // handle facing roatation
-        if(_isGrounded)
-            HandleFacingRotation(_smoothFacing);
+        HandleFacingRotation(_smoothFacing);
+        
+        // handle movement
+        HandleMovement(_moveSpeed, _runSpeed);
 
         // move the character
         _characterController.Move(_movement * Time.deltaTime);
+    }
+
+    private void OnDrawGizmos()
+    {
+        #if UNITY_EDITOR
+            // draw ground check
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, _groundCheckRadius);
+        #endif
     }
 
     #endregion
@@ -83,39 +90,53 @@ public class TPMovement : MonoBehaviour
         {
             // run / default move
             if(Input.GetKey(_runInput))
-                Move(_runSpeed);
+                _isRunning = true;
             else
-                Move(_moveSpeed);
+                _isRunning = false;
 
             // jump
             if(Input.GetKeyDown(_jumpInput))
-                Jump(_jumpHeight, _GRAVITY * _gravityScale);
+                Jump(_jumpHeight, _GRAVITY, _gravityScale);
         }        
     }
 
-    private void HandleGroundCheck()
+    private void HandleGroundCheck(float groundCheckRadius, LayerMask groundLayer)
     {
-        _isGrounded = Physics.CheckSphere(transform.position + (Vector3.up * _groundCheckRadius/2), _groundCheckRadius, _groundLayer);
+        _isGrounded = Physics.CheckSphere(transform.position, groundCheckRadius, groundLayer);
     }
 
-    private void HandleGravity(float gravityPower)
+    private void HandleGravity(float gravityPower, float gravityScale)
     {
         if(_movement.y < 0 && _isGrounded)
-            _movement.y = gravityPower / 2f;
+            _movement.y = gravityPower * gravityScale / 2f;
         else
-            _movement.y += gravityPower * Time.deltaTime;
+            _movement.y += gravityPower * gravityScale * Time.deltaTime;
     }
 
     private void HandleFacingRotation(float smoothRotation)
     {
-        if (RelativeDirection().magnitude > 0)
+        if(_isGrounded)
         {
-            transform.rotation = Quaternion.Lerp
-            (
-                transform.rotation, 
-                Quaternion.LookRotation(RelativeDirection()), 
-                smoothRotation * 10f * Time.deltaTime
-            );
+            if (RelativeDirection().magnitude > 0)
+            {
+                transform.rotation = Quaternion.Lerp
+                (
+                    transform.rotation, 
+                    Quaternion.LookRotation(RelativeDirection()), 
+                    smoothRotation * 10f * Time.deltaTime
+                );
+            }
+        }
+    }
+
+    private void HandleMovement(float moveSpeed, float runSpeed)
+    {
+        if(_isGrounded)
+        {
+            if(_isRunning)
+                Move(runSpeed);
+            else
+                Move(moveSpeed);
         }
     }
 
@@ -141,11 +162,15 @@ public class TPMovement : MonoBehaviour
         _movement.z = RelativeDirection().z * moveSpeed;
     }
 
-    private void Jump(float jumpheight, float gravity)
+    private void Jump(float jumpheight, float gravity, float gravityScale)
     {
-        _movement.y = Mathf.Sqrt(jumpheight * -2 * gravity);
-        if(RelativeDirection().magnitude > 0)
-            transform.rotation = Quaternion.LookRotation(RelativeDirection());
+        if(_isGrounded)
+        {
+            _movement.y = Mathf.Sqrt(jumpheight * -2 * (gravity * gravityScale));
+
+            if(RelativeDirection().magnitude > 0)
+                transform.rotation = Quaternion.LookRotation(RelativeDirection());
+        }
     }
 
     #endregion
