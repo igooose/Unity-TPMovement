@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class TPMovement : MonoBehaviour
+public class TPMovementCC : MonoBehaviour
 {
     #region variables
 

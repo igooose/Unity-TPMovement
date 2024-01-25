@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 3630101601092014486}
   - component: {fileID: 5418279846259459662}
   m_Layer: 2
-  m_Name: Player
+  m_Name: Player (CC)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -250,7 +250,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3630101601092014488}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c55ea4f0c16f6de498b2cde11613cdf4, type: 3}
+  m_Script: {fileID: 11500000, guid: 5bd75c8ec68bb7c4a952a6bb74b2e7e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 5
@@ -258,6 +258,7 @@ MonoBehaviour:
   _jumpHeight: 2
   _smoothFacing: 0.75
   _gravityScale: 2
+  _groundCheckRadius: 0.2
   _groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
