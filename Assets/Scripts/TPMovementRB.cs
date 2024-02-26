@@ -8,9 +8,13 @@ public class TPMovementRB : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _runSpeed = 10f;
-    [SerializeField] private float _jumpHeight = 2f;
     [Range(0f, 1f)] [SerializeField] private float _smoothFacing = 0.75f;
     private bool _isRunning;
+
+    [Header("Jump")]
+    [SerializeField] private float _jumpHeight = 2f;
+    [SerializeField] private bool _onAirMove;
+    [SerializeField] private bool _onAirFacing;
 
     [Header("Physics")]
     [SerializeField] private float _gravityScale = 2f;
@@ -112,29 +116,27 @@ public class TPMovementRB : MonoBehaviour
 
     private void HandleFacingRotation(float smoothRotation)
     {
-        if(_isGrounded)
+        if(!_isGrounded && !_onAirFacing) return;
+
+        if (RelativeDirection().magnitude > 0)
         {
-            if (RelativeDirection().magnitude > 0)
-            {
-                transform.rotation = Quaternion.Lerp
-                (
-                    transform.rotation, 
-                    Quaternion.LookRotation(RelativeDirection()), 
-                    smoothRotation * 10f * Time.deltaTime
-                );
-            }
+            transform.rotation = Quaternion.Lerp
+            (
+                transform.rotation, 
+                Quaternion.LookRotation(RelativeDirection()), 
+                smoothRotation * 10f * Time.deltaTime
+            );
         }
     }
 
     private void HandleMovement(float moveSpeed, float runSpeed)
     {
-        if(_isGrounded)
-        {
-            if(_isRunning)
-                Move(runSpeed);
-            else
-                Move(moveSpeed);
-        }
+        if(!_isGrounded && !_onAirMove) return;
+
+        if(_isRunning)
+            Move(runSpeed);
+        else
+            Move(moveSpeed);
     }
 
     #endregion
