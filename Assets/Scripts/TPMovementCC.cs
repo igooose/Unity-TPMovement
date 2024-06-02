@@ -3,14 +3,16 @@
 [RequireComponent(typeof(CharacterController))]
 public class TPMovementCC : MonoBehaviour
 {
-    #region variables
+#region variables
 
     [Header("Movement")]
-    [SerializeField] private float _moveSpeed = 5f;
-    [SerializeField] private float _runSpeed = 10f;
+    [SerializeField] private float _walkSpeed  = 1f;
+    [SerializeField] private float _moveSpeed = 3f;
+    [SerializeField] private float _sprintSpeed = 7.5f;
+    [SerializeField] private bool _enableWalk = true;
+    [SerializeField] private bool _enableSprint = true;
     [Range(0f, 1f)] [SerializeField] private float _smoothFacing = 0.75f;
     private Vector3 _movement;
-    private bool _isRunning;
 
     [Header("Jump")]
     [SerializeField] private float _jumpHeight = 2f;
@@ -26,10 +28,15 @@ public class TPMovementCC : MonoBehaviour
     [SerializeField] private LayerMask _groundLayer;
     private bool _isGrounded;
 
+    // locomotion state
+    private float _currentMoveSpeed;
+    public LocomotionState State {get; private set;}
+
     // input variables
     private float _zMoveInput;
     private float _xMoveInput;
-    private KeyCode _runInput = KeyCode.LeftShift;
+    private KeyCode _walkInput = KeyCode.LeftControl;
+    private KeyCode _sprintInput = KeyCode.LeftShift;
     private KeyCode _jumpInput = KeyCode.Space;
 
     // component variables
@@ -40,7 +47,7 @@ public class TPMovementCC : MonoBehaviour
 
     /*----------------------------------------------------------------------------------*/
 
-    #region unity methods
+#region unity methods
 
     private void Awake()
     {
@@ -61,12 +68,12 @@ public class TPMovementCC : MonoBehaviour
 
         // handle facing roatation
         HandleFacingRotation(_smoothFacing);
-        
-        // handle movement
-        HandleMovement(_moveSpeed, _runSpeed);
 
         // move the character
         _characterController.Move(_movement * Time.deltaTime);
+
+        // handle locomotion state
+        HandleLocomotionState();
     }
 
     private void OnDrawGizmos()
@@ -78,11 +85,11 @@ public class TPMovementCC : MonoBehaviour
         #endif
     }
 
-    #endregion
+#endregion
 
     /*----------------------------------------------------------------------------------*/
 
-    #region handler methods
+#region handler methods
 
     private void HandleInput()
     {
@@ -92,16 +99,36 @@ public class TPMovementCC : MonoBehaviour
 
         if(_isGrounded)
         {
-            // run / default move
-            if(Input.GetKey(_runInput))
-                _isRunning = true;
-            else
-                _isRunning = false;
+            // move
+            MoveInput();
 
             // jump
-            if(Input.GetKeyDown(_jumpInput))
+            if (Input.GetKeyDown(_jumpInput))
                 Jump(_jumpHeight, _GRAVITY, _gravityScale);
-        }        
+        }
+        else
+        {
+            // on air move
+            if(_onAirMove)
+                MoveInput();
+        }
+
+        void MoveInput()
+        {
+            if (RelativeDirection().magnitude > 0)
+            {
+                if (Input.GetKey(_walkInput) && _enableWalk)
+                    Move(_walkSpeed);
+                else if (Input.GetKey(_sprintInput) && _enableSprint)
+                    Move(_sprintSpeed);
+                else
+                    Move(_moveSpeed);
+            }
+            else
+            {
+                Move(0);
+            }
+        }       
     }
 
     private void HandleGroundCheck(float groundCheckRadius, LayerMask groundLayer)
@@ -132,22 +159,33 @@ public class TPMovementCC : MonoBehaviour
         }
     }
 
-    private void HandleMovement(float moveSpeed, float runSpeed)
+    private void HandleLocomotionState()
     {
-        if(!_isGrounded && !_onAirMove) return;
-
-        if(_isRunning)
-            Move(runSpeed);
+        if (_isGrounded)
+        {
+            if (_currentMoveSpeed == 0)
+                State = LocomotionState.Idle;
+            else if (_currentMoveSpeed == _moveSpeed)
+                State = LocomotionState.Move;
+            else if (_currentMoveSpeed == _walkSpeed)
+                State = LocomotionState.Walk;
+            else if (_currentMoveSpeed == _sprintSpeed)
+                State = LocomotionState.Sprint;
+        }
         else
-            Move(moveSpeed);
-        
+        {
+            if (_characterController.velocity.y > 0)
+                State = LocomotionState.OnJump;
+            else
+                State = LocomotionState.OnFall;
+        }
     }
 
-    #endregion
+#endregion
 
     /*----------------------------------------------------------------------------------*/
 
-    #region movement methods
+#region movement methods
 
     private Vector3 RelativeDirection()
     {
@@ -163,6 +201,7 @@ public class TPMovementCC : MonoBehaviour
     {
         _movement.x = RelativeDirection().x * moveSpeed;
         _movement.z = RelativeDirection().z * moveSpeed;
+        _currentMoveSpeed = moveSpeed;
     }
 
     private void Jump(float jumpheight, float gravity, float gravityScale)
@@ -176,5 +215,5 @@ public class TPMovementCC : MonoBehaviour
         }
     }
 
-    #endregion
+#endregion
 }
