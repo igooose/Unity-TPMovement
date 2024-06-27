@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7055937075272734852}
   - component: {fileID: 4402578625809734909}
   m_Layer: 0
-  m_Name: Directional Light (1)
+  m_Name: Directional Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
   m_LocalPosition: {x: -2.2488077, y: 7.0797954, z: -4.0407743}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6884976726768819282}
   m_RootOrder: 0
@@ -90,6 +91,7 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!1 &6884976726768819283
@@ -118,6 +120,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7055937075272734852}
   - {fileID: 6884976727367347809}
@@ -344,6 +347,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Structure_2
       objectReference: {fileID: 0}
+    - target: {fileID: 8932313865673806121, guid: ff10928b09a43d044aedf70f28358cab,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff10928b09a43d044aedf70f28358cab, type: 3}
 --- !u!4 &6884976725688730449 stripped
@@ -373,6 +381,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Structure_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3382456623762808721, guid: 9c80c0ec435f7d84c9934ec4f343db35,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3382456623762808726, guid: 9c80c0ec435f7d84c9934ec4f343db35,
         type: 3}
